@@ -25,6 +25,7 @@ Route::get('/structureSvg', [App\Http\Controllers\Api\ThreeDController::class, '
 Route::get('/config', [App\Http\Controllers\Api\ThreeDController::class, 'config']);
 Route::get('/floor', [App\Http\Controllers\Api\ThreeDController::class, 'floor']);
 
-Route::get('/test', [App\Http\Controllers\Api\DevBaseController::class, 'accessToken']);
 
+Route::get('/test', [App\Http\Controllers\Api\DevBaseController::class, 'accessToken']);
+Route::get('/test2', [App\Http\Controllers\Api\DevBaseImportController::class, 'import']);
 

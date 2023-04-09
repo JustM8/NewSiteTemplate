@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\DevBaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class ThreeDController extends Controller
 {
@@ -14,45 +15,36 @@ class ThreeDController extends Controller
         $data = $devbase->curl('GET', 'apartments',
             [
                 'option' => [
-
                     'project_id' => $devbase::$project_id,
                 ]
             ]);
-
         $property_sort = $devbase::getCheckTypeProperty();
 
         foreach ($data['data']['data'] as $item){
-//            $imgB = strpos($item['img_big'], 'default.png');
-//            if(!empty($item['img_big']) && $imgB == false) {
-//                $imgBig = get_template_directory_uri() . $devbase::$dir_assets. $item['img_big'];
-//                $pathToBig = str_replace('/inc','',__DIR__.$devbase::$dir_assets.$item['img_big']);
-//
-//                if(file_exists($pathToBig)){
-//                    $img = get_img($imgBig, 'resize', 400);
-//                }else{
-//                    $img = null;
-//                }
-//
-//            } else {
-//                $img = null;
-//                $imgBig = null;
-//            }
+            //переписати момент збереження шляхів зображень або формувати їх від папки паблік і все
+            $imgB = strpos($item['img_big'], 'default.png');
+            if(!empty($item['img_big']) && $imgB == false) {
+                $imgBig = $devbase::$dir_assets. $item['img_big'];
+            } else {
+                $img = null;
+                $imgBig = null;
+            }
 
-//            if (is_array($item['img_custom'])) {
-//
-//                foreach($item['img_custom'] as $k => $hout) {
-//
-//                    if (is_array($hout)) {
-//
-//                        foreach($hout as $key => $t) {
-//
-//                            $item['img_custom'][$k][$key] = $devbase::$dir_assets.$t;
-//                        }
-//
-//                    }
-//                }
-//            }
 
+            if (is_array($item['img_custom'])) {
+
+                foreach($item['img_custom'] as $k => $hout) {
+
+                    if (is_array($hout)) {
+
+                        foreach($hout as $key => $t) {
+
+                            $item['img_custom'][$k][$key] = $devbase::$dir_assets.$t;
+                        }
+
+                    }
+                }
+            }
             $shortType = explode('-',$item['type']);
             $status = unserialize($item['custom_field_10']);
 
@@ -80,20 +72,20 @@ class ThreeDController extends Controller
                     'price' => $item['price'],
                     'price_private' =>  $priceNumberFormat,
                     'type_object' => $item['type_object'],
-//                'img_big' => $imgBig,
+                'img_big' => $imgBig,
 //                'img_small' => $img,
                 'images' => $item['img_custom'],
                 'option' => [],
                 '3d_tour' => $item['custom_field_5'],
                 'sorts' => $item[$property_sort->sorts],
                 'action_price' => $item['custom_field_13'],
-//                'status' => $status[str_replace('/','',lang())],
-//                'room_title' => $status[str_replace('/','',lang())],
+                'status' => $status[str_replace('/','',App::currentLocale())],
+                'room_title' => $status[str_replace('/','',App::currentLocale())],
                 'timer' => $item['custom_field_11'],
                 'view_from_window' => $item['custom_field_12'],
                 'parking' => $item['custom_field_14'],
                 'land' => $item['custom_field_18'],
-//                'lng' => str_replace('/','',lang()),
+                'lng' => App::currentLocale(),
             ];
 
         }

@@ -11,7 +11,7 @@ class DevBaseController extends Controller
 
     protected static $url_server_api = 'https://polo-construction-api.devbase.pro';		 //Домен api DevBase
     protected static $url_server_img = 'https://polo-construction.devbase.pro';			 //Домен api DevBase
-    public static $dir_assets = '/assets';								 //Папка ресурсів в темі куди будуть завантажуватисб зображення
+    public static $dir_assets = '/public/assets';								 //Папка ресурсів в темі куди будуть завантажуватисб зображення
     protected static $api_key = 'guoT5kE1bDm3xncC7kXzwn6euQF0vYhHf6KrVtRU8NYVDwENB1rLAFdMRqW5zeUxiM4KT0'; //Ключ доступу для api DevBase
     public static $type_img = 'img_sec'; //img - всі секції на одному плані img_web - всі секції на одному плані(план поверху в шахматці DevBase відрізняється від того, що на сайті) |  img_sec - кожна секція на окрумому плані |
     public static $project_id = 64;	//ID проекта в DevBase
@@ -141,17 +141,17 @@ class DevBaseController extends Controller
         if (function_exists('get_template_directory_uri')) $url = str_replace(get_template_directory_uri().self::$dir_assets, '', $url);
 
 
-        if (file_exists(TEMPLATEPATH.self::$dir_assets.$url)) {
+        if (file_exists(self::$dir_assets.$url)) {
 
 
-            if ($type_file == 'img' && exif_imagetype(TEMPLATEPATH.self::$dir_assets.$url) === false) {
+            if ($type_file == 'img' && exif_imagetype(self::$dir_assets.$url) === false) {
 
-                if (is_dir(TEMPLATEPATH.self::$dir_assets.$url)) {
+                if (is_dir(self::$dir_assets.$url)) {
 
-                    @rmdir(TEMPLATEPATH.self::$dir_assets.$url);
+                    @rmdir(self::$dir_assets.$url);
                 } else {
 
-                    unlink(TEMPLATEPATH.self::$dir_assets.$url);
+                    unlink(self::$dir_assets.$url);
                 }
 
             } else {
@@ -169,7 +169,7 @@ class DevBaseController extends Controller
             $explodedPath = '/'.implode('/', $explodedPath);
         }
 
-        $dir_uploud = TEMPLATEPATH.self::$dir_assets.$explodedPath;
+        $dir_uploud = self::$dir_assets.$explodedPath;
 
         $download = 1;
 
@@ -249,7 +249,7 @@ class DevBaseController extends Controller
         $data = $this->curl('GET', 'markup3d',
             [
                 'project_id' => $project_id,
-                'assets' => get_template_directory_uri().self::$dir_assets.'/svg3d/', //Вказати шлях де повинні зберігатись файли на сайті
+                'assets' => self::$dir_assets.'/svg3d/', //Вказати шлях де повинні зберігатись файли на сайті
                 'upload_files' => true,  //Згенерувати svg файли для завантеження
             ]);
 
@@ -258,18 +258,18 @@ class DevBaseController extends Controller
 
         if (count($data['data']['uploadFiles'])) {
 
-            if (!file_exists(TEMPLATEPATH.self::$dir_assets.'/svg3d/')) mkdir(TEMPLATEPATH.self::$dir_assets.'/svg3d/', 0775, true);
+            if (!file_exists(self::$dir_assets.'/svg3d/')) mkdir(self::$dir_assets.'/svg3d/', 0775, true);
         }
 
         $update = false;
 
         foreach ($data['data']['uploadFiles'] as $t) {
 
-            if (!file_exists(TEMPLATEPATH.self::$dir_assets.'/svg3d/'.$t['title'])) {
+            if (!file_exists(self::$dir_assets.'/svg3d/'.$t['title'])) {
 
-                if (file_exists(TEMPLATEPATH.self::$dir_assets.'/svg3d/')) {
+                if (file_exists(self::$dir_assets.'/svg3d/')) {
 
-                    foreach (glob(TEMPLATEPATH.self::$dir_assets.'/svg3d/*') as $file) {
+                    foreach (glob(self::$dir_assets.'/svg3d/*') as $file) {
 
                         unlink($file);
                     }
@@ -285,7 +285,7 @@ class DevBaseController extends Controller
 
             foreach ($data['data']['uploadFiles'] as $t) {
 
-                file_put_contents(TEMPLATEPATH.self::$dir_assets.'/svg3d/'.$t['title'], $t['file'], LOCK_EX);
+                file_put_contents(self::$dir_assets.'/svg3d/'.$t['title'], $t['file'], LOCK_EX);
             }
         }
 
