@@ -13,7 +13,18 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+//
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::get('test', [App\Http\Controllers\Api\TestController::class, 'test'])->name('test');
+
+Route::get('/flats', [App\Http\Controllers\Api\ThreeDController::class, 'flats']);
+Route::get('/structureSvg', [App\Http\Controllers\Api\ThreeDController::class, 'structureSvg']);
+Route::get('/config', [App\Http\Controllers\Api\ThreeDController::class, 'config']);
+Route::get('/floor', [App\Http\Controllers\Api\ThreeDController::class, 'floor']);
+
+Route::get('/test', [App\Http\Controllers\Api\DevBaseController::class, 'accessToken']);
+
+
